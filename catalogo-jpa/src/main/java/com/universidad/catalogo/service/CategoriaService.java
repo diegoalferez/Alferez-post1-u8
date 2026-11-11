@@ -35,8 +35,15 @@ public class CategoriaService {
         return repo.save(categoria);
     }
 
+    // Parte 2: no se elimina una categoría que todavía tiene productos asociados
     @Transactional
     public void eliminar(Long id) {
+        Categoria categoria = buscarPorId(id);
+        if (!categoria.getProductos().isEmpty()) {
+            throw new IllegalStateException(
+                    "No se puede eliminar la categoría: tiene " +
+                    categoria.getProductos().size() + " producto(s) asociado(s).");
+        }
         repo.deleteById(id);
     }
 }

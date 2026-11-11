@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Productos</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 860px; margin: 2rem auto; padding: 0 1rem; }
+        table { border-collapse: collapse; width: 100%; margin-top: 1rem; }
+        th, td { border: 1px solid #ccc; padding: 8px; text-align: left; }
+        th { background: #f0f0f0; }
+        .ok { background: #e6f7e6; padding: 8px; border-radius: 4px; }
+        .error { background: #fde8e8; color: #a00; padding: 8px; border-radius: 4px; }
+        .campo-error { color: #a00; font-size: 0.9em; }
+        label { display: inline-block; width: 110px; }
+        div.campo { margin-bottom: 10px; }
+    </style>
+</head>
+<body>
+<h1>Lista de Productos</h1>
+
+<p class="ok" th:if="${mensaje}" th:text="${mensaje}"></p>
+
+<a th:href="@{/productos/nuevo}">Nuevo Producto</a> |
+<a th:href="@{/categorias}">Ver categorías</a>
+
+<h3>Filtrar por categoría y precio mínimo</h3>
+<form th:action="@{/productos/filtrar}" method="get">
+    <select name="categoriaId" required>
+        <option value="">-- Categoría --</option>
+        <option th:each="c : ${categorias}" th:value="${c.id}" th:text="${c.nombre}"></option>
+    </select>
+    <input type="number" name="minimo" step="0.01" min="0" placeholder="Precio mayor a..." required />
+    <button type="submit">Filtrar</button>
+</form>
+
+<table>
+    <thead>
+    <tr><th>Nombre</th><th>Categoría</th><th>Precio</th><th>Stock</th><th>Acciones</th></tr>
+    </thead>
+    <tbody>
+    <tr th:each="p : ${productos}">
+        <td th:text="${p.nombre}"></td>
+        <td th:text="${p.categoria.nombre}"></td>
+        <td th:text="${p.precio}"></td>
+        <td th:text="${p.stock}"></td>
+        <td>
+            <a th:href="@{/productos/editar/{id}(id=${p.id})}">Editar</a>
+            <a th:href="@{/productos/eliminar/{id}(id=${p.id})}">Eliminar</a>
+        </td>
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>
